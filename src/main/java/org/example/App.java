@@ -31,7 +31,7 @@ public class App {
             System.out.println("---------------------");
             System.out.println("| 3     CUSTOMERS    ");
             System.out.println("---------------------");
-            System.out.println("| 4     QUIT         ");
+            System.out.println("| 4     QUIT    -     ");
             System.out.println("---------------------");
             System.out.print("CHOOSE MENU: ");
             int choose = sc.nextInt();
