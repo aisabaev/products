@@ -21,7 +21,7 @@ public class App {
             System.out.println("| 2 - ORDERS          |");
             System.out.println("-----------------------");
             System.out.println("| 3 - CUSTOMERS       |");
-            System.out.println("-----------------------");
+            System.out.println("------------------------");
             System.out.println("| 4 - QUIT            |");
             System.out.println("-----------------------");
             System.out.print("CHOOSE MENU: ");
@@ -52,7 +52,7 @@ public class App {
             System.out.println("-----------------------");
             System.out.println("| 5 - GET ALL         |");
             System.out.println("-----------------------");
-            System.out.println("| 6 - QUIT     ----       |");
+            System.out.println("| 6 - QUIT     -----       |");
             System.out.println("-----------------------");
             System.out.print("CHOOSE CUSTOMER MENU: ");
             int choose = scanner.nextInt();
