@@ -16,7 +16,7 @@ public class App {
             System.out.println("-----------------------");
             System.out.println("|         MENU        |");
             System.out.println("-----------------------");
-            System.out.println("| 1 - PRODUCTS        |");
+            System.out.println("| 1 - Продукт        |");
             System.out.println("-----------------------");
             System.out.println("| 2 - ORDERS          |");
             System.out.println("-----------------------");
