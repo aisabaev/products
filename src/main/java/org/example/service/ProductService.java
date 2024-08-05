@@ -1,6 +1,8 @@
 package org.example.service;
 
 import org.example.dao.ProductDao;
+import org.example.exception.NotFoundByIDException;
+import org.example.exception.ExceptionCreate;
 import org.example.models.Product;
 
 import java.util.List;
@@ -21,16 +23,31 @@ public class ProductService {
         Double price = sc.nextDouble();
         sc.nextLine();
         product.setPrice(price);
-        productDao.create(product);
-        System.out.println("Product created successfully");
+        try {
+            boolean result = productDao.create(product);
+            if (!result){
+                throw new ExceptionCreate("product");
+            }
+            System.out.println("Product created successfully");
+        }catch (ExceptionCreate ex){
+            ex.getMessage();
+        }
     }
 
     public void getById(){
         System.out.println("Enter product's id: ");
         int id = sc.nextInt();
         sc.nextLine();
-        Product product = productDao.getById(id);
-        printProduct(product);
+        try {
+            Product product = productDao.getById(id);
+            if (product==null){
+                throw new NotFoundByIDException("product", id);
+            }
+            printProduct(product);
+        }catch (NotFoundByIDException ex){
+            System.out.println(ex.getMessage());
+        }
+
     }
 
 
@@ -39,36 +56,45 @@ public class ProductService {
         System.out.println("Enter product's id: ");
         int id = sc.nextInt();
         sc.nextLine();
-        Product product = productDao.getById(id);
-        printProduct(product);
-
-        System.out.println("Enter name: ");
-        String name = sc.nextLine();
-        if(!name.isEmpty()){
-            product.setProductName(name);
+        try {
+            Product product = productDao.getById(id);
+            if (product==null){
+                throw new NotFoundByIDException("product", id);
+            }
+            printProduct(product);
+            System.out.println("Enter name: ");
+            String name = sc.nextLine();
+            if(!name.isEmpty()){
+                product.setProductName(name);
+            }
+            System.out.println("Enter description: ");
+            String description = sc.nextLine();
+            if(!description.isEmpty()){
+                product.setDescription(description);
+            }
+            System.out.println("Enter price: ");
+            Double price = sc.nextDouble();
+            sc.nextLine();
+            if(!price.isNaN()){
+                product.setPrice(price);
+            }
+            productDao.updateProduct(product);
+            System.out.println("Product updated");
+        }catch (NotFoundByIDException ex){
+            System.out.println(ex.getMessage());
         }
-        System.out.println("Enter description: ");
-        String description = sc.nextLine();
-        if(!description.isEmpty()){
-            product.setDescription(description);
-        }
-        System.out.println("Enter price: ");
-        Double price = sc.nextDouble();
-        sc.nextLine();
-        if(!price.isNaN()){
-            product.setPrice(price);
-        }
-
-        productDao.updateProduct(product);
-        System.out.println("Product updated");
-
     }
 
     public void deleteProduct(){
         System.out.println("Enter id product: ");
         int id = sc.nextInt();
         sc.nextLine();
-        productDao.deleteProduct(id);
+        try {
+            productDao.deleteProduct(id);
+        }catch (NotFoundByIDException ex){
+            System.out.println(ex.getMessage());
+        }
+
     }
 
 

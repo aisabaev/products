@@ -1,6 +1,8 @@
 package org.example.service;
 
 import org.example.dao.CustomerDao;
+import org.example.exception.ExceptionCreate;
+import org.example.exception.NotFoundByIDException;
 import org.example.models.Customer;
 
 import java.util.Scanner;
@@ -17,45 +19,73 @@ public class CustomerService {
 
         System.out.println("Enter contact info: ");
         customer.setContactInfo(scanner.nextLine());
-        customerDao.create(customer);
+        try {
+            boolean result = customerDao.create(customer);
+            if (!result){
+                throw new ExceptionCreate("customer");
+            }
+            System.out.println("Customer saved!");
+        }catch (ExceptionCreate ex){
+            System.out.println(ex.getMessage());
+        }
 
-        System.out.println("Customer saved!");
+
+
     }
 
     public void getById(){
         System.out.println("Enter customer id: ");
         int id = scanner.nextInt();
         scanner.nextLine();
-        Customer customer = customerDao.getById(id);
-        printCustomer(customer);
+        try {
+            Customer customer = customerDao.getById(id);
+            if (customer==null){
+                throw new NotFoundByIDException("customer", id);
+            }
+            printCustomer(customer);
+        }catch (NotFoundByIDException ex){
+            System.out.println(ex.getMessage());
+        }
+
     }
 
     public void updateCustomer(){
         System.out.println("Enter customer id: ");
         int id = scanner.nextInt();
         scanner.nextLine();
-        Customer customer = customerDao.getById(id);
-        printCustomer(customer);
-        System.out.println("Enter customer name: ");
-        String customerName = scanner.nextLine();
-        if (!customerName.isEmpty()){
-            customer.setCustomerName(customerName);
+        try {
+            Customer customer = customerDao.getById(id);
+            printCustomer(customer);
+            if (customer==null){
+                throw new NotFoundByIDException("customer", id);
+            }
+            System.out.println("Enter customer name: ");
+            String customerName = scanner.nextLine();
+            if (!customerName.isEmpty()){
+                customer.setCustomerName(customerName);
+            }
+            System.out.println("Enter contact info: ");
+            String contactInfo = scanner.nextLine();
+            if (!contactInfo.isEmpty()){
+                customer.setContactInfo(contactInfo);
+            }
+            customerDao.updateCustomer(customer);
+            System.out.println("Customer updated!");
+        } catch (NotFoundByIDException e) {
+            System.out.println(e.getMessage());
         }
-        System.out.println("Enter contact info: ");
-        String contactInfo = scanner.nextLine();
-        if (!contactInfo.isEmpty()){
-            customer.setContactInfo(contactInfo);
-        }
-        customerDao.updateCustomer(customer);
-        System.out.println("Customer updated!");
     }
 
     public void deleteCustomerById(){
         System.out.println("Enter customer id: ");
         int id = scanner.nextInt();
         scanner.nextLine();
-        customerDao.deleteCustomer(id);
-        System.out.println("Customer with id: " + id + "deleted");
+        try {
+            customerDao.deleteCustomer(id);
+            System.out.println("Customer with id: " + id + "deleted");
+        } catch (NotFoundByIDException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
 

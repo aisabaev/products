@@ -4,6 +4,7 @@ package org.example.service;
 import org.example.dao.CustomerDao;
 import org.example.dao.OrderDao;
 import org.example.dao.ProductDao;
+import org.example.exception.NotFoundByIDException;
 import org.example.models.Customer;
 import org.example.models.Order;
 import org.example.models.Product;
@@ -28,8 +29,15 @@ public class OrderService {
         System.out.println("Enter customer's id: ");
         int customerId = sc.nextInt();
         sc.nextLine();
-        Customer customer = customerDao.getById(customerId);
-        order.setCustomer(customer);
+        try {
+            Customer customer = customerDao.getById(customerId);
+            if (customer==null){
+                throw new NotFoundByIDException("customer", customerId);
+            }
+            order.setCustomer(customer);
+        }catch (NotFoundByIDException ex){
+            System.out.println(ex.getMessage());
+        }
 
 
         setDate(order);
@@ -37,20 +45,35 @@ public class OrderService {
         productList = addArrayList(productList);
         order.setProductList(productList);
 
-        orderDao.create(order);
+        try {
+            // сделать в orderDao try/catch
+            orderDao.create(order);
+        }
+
     }
 
     public void getOrderById(){
         System.out.println("Enter order id: ");
         int id = sc.nextInt();
         sc.nextLine();
-        Order order = orderDao.getById(id);
-        printOrder(order);
+        Order order = null;
+        try {
+            order = orderDao.getById(id);
+            printOrder(order);
+        } catch (NotFoundByIDException e) {
+            System.out.println(e.getMessage());
+        }
+
     }
 
     public void updateOrder(){
         System.out.println("Enter order id: ");
-        Order order = orderDao.getById(sc.nextInt());
+        Order order = null;
+        try {
+            order = orderDao.getById(sc.nextInt());
+        } catch (NotFoundByIDException e) {
+            System.out.println(e.getMessage());
+        }
         sc.nextLine();
         List<Product> productList = order.getProductList();
 
@@ -116,6 +139,8 @@ public class OrderService {
             printProduct(product);
         }
         System.out.println("----------------------------");
+
+
     }
 
     protected void printProduct(Product product){

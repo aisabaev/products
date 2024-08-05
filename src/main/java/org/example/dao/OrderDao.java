@@ -2,6 +2,7 @@ package org.example.dao;
 
 
 
+import org.example.exception.NotFoundByIDException;
 import org.example.models.Order;
 import org.example.models.Product;
 import org.example.service.ProductService;
@@ -48,6 +49,13 @@ public class OrderDao {
 
     }
 
+
+
+
+    // Здесь сделать два два try catch
+
+
+
     public void create(Order order) {
         String createOrder = "insert into orders(order_status,order_date,customer_id) values(?,?,?) RETURNING order_id";
         PreparedStatement preparedStatement = null;
@@ -78,7 +86,7 @@ public class OrderDao {
         }
     }
 
-    public Order getById(int id) {
+    public Order getById(int id) throws NotFoundByIDException{
         String sql = "select * from orders where order_id=?;";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -91,6 +99,8 @@ public class OrderDao {
                 order.setOrderStatus(resultSet.getString("order_status"));
                 order.setOrderId(resultSet.getInt("order_id"));
                 order.setDate(resultSet.getDate("order_date"));
+            }else {
+                throw new NotFoundByIDException("Order", id);
             }
             String getProducts = "select * from orders_products where order_id=?;";
             PreparedStatement preparedStatement1 = connection.prepareStatement(getProducts);

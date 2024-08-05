@@ -1,5 +1,6 @@
 package org.example;
 
+import org.example.exception.CommandNotFound;
 import org.example.models.Customer;
 import org.example.models.Order;
 import org.example.models.Product;
@@ -49,6 +50,8 @@ public class App {
                 case 4:
                     check = false;
                     break;
+                default:
+                    System.out.println("Command not found!");
             }
 
         }
@@ -96,6 +99,8 @@ public class App {
                 case 6:
                     check = false;
                     break;
+                default:
+                    System.out.println("Command not found!");
             }
 
         }
@@ -141,6 +146,8 @@ public class App {
                 case 6:
                     check = false;
                     break;
+                default:
+                    System.out.println("Command not found!");
             }
 
         }
@@ -167,26 +174,33 @@ public class App {
             System.out.println("CHOOSE CUSTOMER MENU: ");
             int choose = sc.nextInt();
             sc.nextLine();
-            switch (choose){
-                case 1:
-                    customerService.saveCustomer();
-                    break;
-                case 2:
-                    customerService.getById();
-                    break;
-                case 3:
-                    customerService.updateCustomer();
-                    break;
-                case 4:
-                    customerService.deleteCustomerById();
-                    break;
-                case 5:
-                    customerService.getAll();
-                    break;
-                case 6:
-                    check = false;
-                    break;
+            try {
+                switch (choose){
+                    case 1:
+                        customerService.saveCustomer();
+                        break;
+                    case 2:
+                        customerService.getById();
+                        break;
+                    case 3:
+                        customerService.updateCustomer();
+                        break;
+                    case 4:
+                        customerService.deleteCustomerById();
+                        break;
+                    case 5:
+                        customerService.getAll();
+                        break;
+                    case 6:
+                        check = false;
+                        break;
+                    default:
+                        throw new CommandNotFound();
+                }
+            }catch (CommandNotFound ex){
+                System.out.println(ex.getMessage());
             }
+
 
         }
     }

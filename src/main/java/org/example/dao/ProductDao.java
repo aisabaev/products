@@ -1,5 +1,6 @@
 package org.example.dao;
 
+import org.example.exception.NotFoundByIDException;
 import org.example.models.Product;
 import org.example.utils.DbConnector;
 
@@ -87,13 +88,16 @@ public class ProductDao {
         }
     }
 
-    public void deleteProduct(int id){
+    public void deleteProduct(int id) throws NotFoundByIDException{
         String sql = "delete from product where product_id=?;";
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1,id);
-            preparedStatement.execute();
+            boolean result = preparedStatement.execute();
+            if (!result){
+                throw new NotFoundByIDException("Product", id);
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

@@ -28,14 +28,14 @@ public class CustomerDao {
         }
     }
 
-    public void create(Customer customer){
+    public boolean create(Customer customer){
         String sql = "insert into customer(customer_name, contact_info) values (? , ?)";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, customer.getCustomerName());
             preparedStatement.setString(2, customer.getContactInfo());
             boolean resultSet = preparedStatement.execute();
-            System.out.println(resultSet);
+            return resultSet;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
