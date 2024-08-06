@@ -19,6 +19,7 @@ public class CustomerService {
 
         System.out.println("Enter contact info: ");
         customer.setContactInfo(scanner.nextLine());
+        // Проверка по ID
         try {
             boolean result = customerDao.create(customer);
             if (!result){
@@ -37,6 +38,7 @@ public class CustomerService {
         System.out.println("Enter customer id: ");
         int id = scanner.nextInt();
         scanner.nextLine();
+        // Обработка исключения где ID не существует
         try {
             Customer customer = customerDao.getById(id);
             if (customer==null){
@@ -53,6 +55,7 @@ public class CustomerService {
         System.out.println("Enter customer id: ");
         int id = scanner.nextInt();
         scanner.nextLine();
+        // Обработка исключения где ID не существует
         try {
             Customer customer = customerDao.getById(id);
             printCustomer(customer);
@@ -80,6 +83,7 @@ public class CustomerService {
         System.out.println("Enter customer id: ");
         int id = scanner.nextInt();
         scanner.nextLine();
+        // Обработка исключения где ID не существует
         try {
             customerDao.deleteCustomer(id);
             System.out.println("Customer with id: " + id + "deleted");
@@ -89,12 +93,14 @@ public class CustomerService {
     }
 
 
-
+    // Метод выводит всех пользователей
     public void getAll(){
         for (Customer customer : customerDao.getAll()) {
             printCustomer(customer);
         }
     }
+
+    // Метод выводит красиво в консоль
     private void printCustomer(Customer customer){
         System.out.println("--------------");
         System.out.println("customer id: " + customer.getCustomerId());

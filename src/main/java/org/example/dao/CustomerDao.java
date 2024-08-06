@@ -1,6 +1,7 @@
 package org.example.dao;
 
 
+import org.example.exception.NotFoundByIDException;
 import org.example.models.Customer;
 import org.example.utils.DbConnector;
 
@@ -93,12 +94,15 @@ public class CustomerDao {
             throw new RuntimeException(e);
         }
     }
-    public void deleteCustomer(int id){
+    public void deleteCustomer(int id) throws NotFoundByIDException{
         String sql = "delete from customer where customer_id=?";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, id);
-            preparedStatement.execute();
+            boolean result = preparedStatement.execute();
+            if (!result){
+                throw new NotFoundByIDException("customer", id);
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

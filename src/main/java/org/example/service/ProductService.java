@@ -38,6 +38,7 @@ public class ProductService {
         System.out.println("Enter product's id: ");
         int id = sc.nextInt();
         sc.nextLine();
+        // Обработка исключения где ID не существует
         try {
             Product product = productDao.getById(id);
             if (product==null){
@@ -89,6 +90,7 @@ public class ProductService {
         System.out.println("Enter id product: ");
         int id = sc.nextInt();
         sc.nextLine();
+        // Обработка исключения где ID не существует
         try {
             productDao.deleteProduct(id);
         }catch (NotFoundByIDException ex){

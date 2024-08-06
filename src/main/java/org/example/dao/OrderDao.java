@@ -2,6 +2,7 @@ package org.example.dao;
 
 
 
+import org.example.exception.ExceptionCreate;
 import org.example.exception.NotFoundByIDException;
 import org.example.models.Order;
 import org.example.models.Product;
@@ -52,11 +53,10 @@ public class OrderDao {
 
 
 
-    // Здесь сделать два два try catch
 
 
 
-    public void create(Order order) {
+    public void create(Order order) throws ExceptionCreate{
         String createOrder = "insert into orders(order_status,order_date,customer_id) values(?,?,?) RETURNING order_id";
         PreparedStatement preparedStatement = null;
         try {
@@ -65,8 +65,10 @@ public class OrderDao {
             preparedStatement.setDate(2, order.getDate());
             preparedStatement.setInt(3, order.getCustomer().getCustomerId());
             // Нижний preparedStatement не удалять, он нужен для верхнего Query
-            preparedStatement.execute(); // <- Вот его не надо удалять
-
+            boolean result = preparedStatement.execute(); // <- Вот его не надо удалять
+            if (!result){
+                throw new ExceptionCreate("order");
+            }
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
 
             if (generatedKeys.next()) {
@@ -78,7 +80,10 @@ public class OrderDao {
                     PreparedStatement preparedStatement1 = connection.prepareStatement(createManyToManyRecord);
                     preparedStatement1.setInt(1, product.getProductId());
                     preparedStatement1.setInt(2, id);
-                    preparedStatement1.execute();
+                    boolean resultManytoMany = preparedStatement1.execute();
+                    if (!resultManytoMany){
+                        throw new ExceptionCreate("order product");
+                    }
                 }
             }
         } catch (SQLException e) {
@@ -143,18 +148,23 @@ public class OrderDao {
 
     }
 
-    public void deleteOrder(int id) {
-
+    public void deleteOrder(int id) throws NotFoundByIDException{
         String delete_many_to_many = "DELETE FROM orders_products WHERE order_id = ?";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(delete_many_to_many);
             preparedStatement.setInt(1, id);
-            preparedStatement.execute();
+            boolean result = preparedStatement.execute();
+            if (!result){
+                throw new NotFoundByIDException("order", id);
+            }
 
             String sql = "DELETE FROM orders WHERE order_id = ?";
             PreparedStatement preparedStatement1 = connection.prepareStatement(sql);
             preparedStatement1.setInt(1, id);
-            preparedStatement1.execute();
+            boolean resultManyToMany = preparedStatement1.execute();
+            if (!resultManyToMany){
+                throw new NotFoundByIDException("product", id);
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
