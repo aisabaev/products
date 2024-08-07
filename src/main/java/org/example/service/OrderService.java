@@ -7,6 +7,7 @@ import org.example.dao.ProductDao;
 import org.example.models.Customer;
 import org.example.models.Order;
 import org.example.models.Product;
+import org.example.utils.Printable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,24 @@ public class OrderService {
     CustomerDao customerDao = new CustomerDao();
     ProductDao productDao = new ProductDao();
 
+    Printable<Order> printable = order -> {
+        System.out.println("----------------------------");
+        System.out.println("ORDER ID: " + order.getOrderId());
+        System.out.println("ORDER STATUS: " + order.getOrderStatus());
+        System.out.println("CUSTOMER ID: " + order.getCustomer().getCustomerId());
+        List<Product> productList = order.getProductList();
+
+        Printable<Product> printable1 = product -> {
+            System.out.println("ID: " + product.getProductId());
+            System.out.println("NAME: " + product.getProductName());
+            System.out.println("DESCRIPTION: " + product.getDescription());
+            System.out.println("PRICE: " + product.getPrice());
+        };
+        for(Product product: productList){
+            printable1.print(product);
+        }
+        System.out.println("----------------------------");
+    };
 
     public void createOrder(){
         System.out.println("Enter order status: ");
@@ -45,7 +64,7 @@ public class OrderService {
         int id = sc.nextInt();
         sc.nextLine();
         Order order = orderDao.getById(id);
-        printOrder(order);
+        printable.print(order);
     }
 
     public void updateOrder(){
@@ -102,28 +121,7 @@ public class OrderService {
 
     public void getAll(){
        for(Order order : orderDao.getAll()){
-           printOrder(order);
+           printable.print(order);
        }
-    }
-
-    private void printOrder(Order order){
-        System.out.println("----------------------------");
-        System.out.println("ORDER ID: " + order.getOrderId());
-        System.out.println("ORDER STATUS: " + order.getOrderStatus());
-        System.out.println("CUSTOMER ID: " + order.getCustomer().getCustomerId());
-        List<Product> productList = order.getProductList();
-        for(Product product: productList){
-            printProduct(product);
-        }
-        System.out.println("----------------------------");
-    }
-
-    protected void printProduct(Product product){
-
-        System.out.println("ID: " + product.getProductId());
-        System.out.println("NAME: " + product.getProductName());
-        System.out.println("DESCRIPTION: " + product.getDescription());
-        System.out.println("PRICE: " + product.getPrice());
-
     }
 }

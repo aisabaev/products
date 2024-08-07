@@ -1,13 +1,24 @@
 package org.example.service;
 
 import org.example.dao.ProductDao;
+import org.example.exceptions.ProductCreateException;
 import org.example.models.Product;
+import org.example.utils.Printable;
 
 import java.util.Scanner;
 
 public class ProductService {
     ProductDao productDao = new ProductDao();
     Scanner scanner = new Scanner(System.in);
+
+    Printable<Product> printable = p -> {
+        System.out.println("--------------");
+        System.out.println("product id: " + p.getProductId());
+        System.out.println("product name: " + p.getProductName());
+        System.out.println("product description: " + p.getDescription());
+        System.out.println("product price: " + p.getPrice());
+        System.out.println("---------------");
+    };
 
     public void saveProduct(){
         Product product = new Product();
@@ -30,7 +41,15 @@ public class ProductService {
             product.setPrice(productPrice);
         }
 
-        productDao.create(product);
+        try {
+            boolean result = productDao.create(product);
+            if (!result){
+                throw new ProductCreateException();
+            }
+        }catch (ProductCreateException ex){
+            ex.getMessage();
+        }
+
 
         System.out.println("Product saved!");
     }
@@ -88,7 +107,7 @@ public class ProductService {
         System.out.println("Product with id: " + id + "deleted");
     }
 
-    private   void printProduct(Product product){
+    private void printProduct(Product product){
             System.out.println("--------------");
             System.out.println("product id: " + product.getProductId());
             System.out.println("product name: " + product.getProductName());
@@ -99,9 +118,10 @@ public class ProductService {
     }
 
     public void getAllProducts(){
+
         if (!productDao.getAllProducts().isEmpty()) {
             for (Product product: productDao.getAllProducts()) {
-                printProduct(product);
+                printable.print(product);
             }
         } else {
             System.out.println("No products.");
