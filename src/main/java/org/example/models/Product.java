@@ -6,7 +6,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class Product {
+public class Product implements Comparable<Product>{
     private int productId;
     private String productName;
     private String description;
@@ -53,5 +53,17 @@ public class Product {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    @Override
+    public int compareTo(Product product) {
+        if (this.getPrice() > product.getPrice()){
+            return 1;
+        }else if (this.getPrice() < product.getPrice()){
+            return -1;
+        }else {
+            return 0;
+        }
+
     }
 }

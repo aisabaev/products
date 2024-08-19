@@ -8,17 +8,27 @@ import org.example.models.Customer;
 import org.example.models.Order;
 import org.example.models.Product;
 import org.example.utils.Printable;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
-
+@Component
 public class OrderService {
-    OrderDao orderDao = new OrderDao();
+    private OrderDao orderDao;
     Scanner sc = new Scanner(System.in);
-    CustomerDao customerDao = new CustomerDao();
-    ProductDao productDao = new ProductDao();
+    private  CustomerDao customerDao;
+    private ProductDao productDao;
+
+    public  OrderService(OrderDao orderDao, CustomerDao customerDao, ProductDao productDao){
+        this.orderDao = orderDao;
+        this.customerDao = customerDao;
+        this.productDao = productDao;
+    }
+
+
 
     Printable<Order> printable = order -> {
         System.out.println("----------------------------");
@@ -33,9 +43,15 @@ public class OrderService {
             System.out.println("DESCRIPTION: " + product.getDescription());
             System.out.println("PRICE: " + product.getPrice());
         };
-        for(Product product: productList){
-            printable1.print(product);
-        }
+//        for(Product product: productList){
+//            printable1.print(product);
+//        }
+        List<String>  myList = productList.stream()
+                        .filter(product -> product.getPrice() > 200)
+                .sorted()
+                .map(p -> "id: " + p.getProductId() + " Name: " + p.getProductName() + " Decsription " + p.getDescription() + " Price: " + p.getPrice())
+
+                .collect(Collectors.toList());
         System.out.println("----------------------------");
     };
 

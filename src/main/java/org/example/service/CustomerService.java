@@ -2,12 +2,17 @@ package org.example.service;
 
 import org.example.dao.CustomerDao;
 import org.example.models.Customer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Scanner;
 
+@Component
 public class CustomerService {
 
-    CustomerDao customerDao = new CustomerDao();
+    @Autowired
+    private CustomerDao customerDao;
+
     Scanner scanner = new Scanner(System.in);
 
     public void saveCustomer(){

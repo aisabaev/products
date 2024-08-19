@@ -1,8 +1,11 @@
 package org.example.utils;
 
+import org.springframework.stereotype.Component;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+
 
 public class DbConnector {
     private Connection connection = null;

@@ -4,11 +4,16 @@ import org.example.dao.ProductDao;
 import org.example.exceptions.ProductCreateException;
 import org.example.models.Product;
 import org.example.utils.Printable;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Scanner;
 
+@Component
 public class ProductService {
-    ProductDao productDao = new ProductDao();
+
+    @Autowired
+    private ProductDao productDao;
     Scanner scanner = new Scanner(System.in);
 
     Printable<Product> printable = p -> {

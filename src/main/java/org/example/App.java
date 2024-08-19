@@ -1,7 +1,11 @@
 package org.example;
 
+import org.example.config.ProjectConfig;
 import org.example.service.CustomerService;
 import org.example.service.ProductService;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.stereotype.Component;
 
 import java.util.Scanner;
 
@@ -9,8 +13,13 @@ import java.util.Scanner;
  * Hello world!
  *
  */
+
+@Component
+
 public class App {
     static Scanner scanner = new Scanner(System.in);
+    static AnnotationConfigApplicationContext context =
+            new AnnotationConfigApplicationContext(ProjectConfig.class);
     public static void main( String[] args ) {
         boolean check = true;
         while (check){
@@ -42,7 +51,7 @@ public class App {
     }
 
     private static void customer() {
-        CustomerService customerService = new CustomerService();
+        CustomerService customerService = context.getBean(CustomerService.class);
         boolean check = true;
         while (check){
             System.out.println("-----------------------");
@@ -88,7 +97,7 @@ public class App {
     }
 
     private static void product() {
-        ProductService productService = new ProductService();
+        ProductService productService = context.getBean(ProductService.class);
 
         boolean check = true;
         while (check){

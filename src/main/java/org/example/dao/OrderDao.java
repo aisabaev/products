@@ -4,16 +4,23 @@ package org.example.dao;
 import org.example.models.Order;
 import org.example.models.Product;
 import org.example.utils.DbConnector;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class OrderDao {
 
-    Connection connection = null;
-    CustomerDao customerDao = new CustomerDao();
-    ProductDao productDao = new ProductDao();
+    @Autowired
+    Connection connection;
+
+    @Autowired
+    CustomerDao customerDao;
+    @Autowired
+    ProductDao productDao;
 
     public OrderDao() {
         DbConnector connector = new DbConnector();

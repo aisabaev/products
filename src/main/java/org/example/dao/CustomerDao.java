@@ -3,12 +3,16 @@ package org.example.dao;
 
 import org.example.models.Customer;
 import org.example.utils.DbConnector;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.sql.*;
 
+@Component
 public class CustomerDao {
 
-    Connection connection = null;
+    @Autowired
+    Connection connection;
 
     public CustomerDao(){
         DbConnector connector = new DbConnector();

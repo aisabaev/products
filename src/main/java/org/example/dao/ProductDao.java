@@ -2,14 +2,20 @@ package org.example.dao;
 
 import org.example.models.Product;
 import org.example.utils.DbConnector;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class ProductDao {
 
-    Connection connection = null;
+    @Autowired
+    Connection connection;
+
+
     public ProductDao(){
         DbConnector connector = new DbConnector();
         this.connection = connector.getConnection();
